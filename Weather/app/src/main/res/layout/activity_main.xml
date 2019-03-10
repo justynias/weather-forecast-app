@@ -21,7 +21,7 @@
             android:id="@+id/materialCardView_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="100dp"
+            android:minHeight="110dp"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toTopOf="parent"
             app:cardElevation="5dp" tools:layout_editor_absoluteX="37dp">
@@ -38,10 +38,10 @@
                     android:text="Katowice,"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="6dp"
-                    android:fontFamily="sens-serif-light"
+                    android:fontFamily="sans-serif-light"
                     android:textSize="34dp"/>
             <TextView
                     android:id="@+id/textView_description"
@@ -60,10 +60,11 @@
                     android:text="22"
                     app:layout_constraintStart_toEndOf="@+id/textView_description"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/textView_temperature"
-                    android:fontFamily="sens-serif-light"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:fontFamily="sans-serif-light"
                     android:textSize="60dp"
-                    app:layout_constraintHorizontal_bias="0.179"/>
+                    app:layout_constraintHorizontal_bias="0.179"
+                    android:layout_marginTop="8dp"/>
 
             <TextView
                     android:id="@+id/textView_degrees"
@@ -98,7 +99,7 @@
             android:id="@+id/WeatherCard1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView_main" tools:layout_editor_absoluteX="10dp">
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView_main">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -111,7 +112,9 @@
                     android:layout_height="wrap_content"
                     android:text="Temperature min"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_temp_max"
@@ -119,7 +122,9 @@
                     android:layout_height="wrap_content"
                     android:text="Temperature max"
                     app:layout_constraintTop_toBottomOf="@+id/textView_temp_min"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_temp_min_value"
@@ -128,7 +133,9 @@
                     android:text="18 &#x2103;"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-            />
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_temp_max_value"
@@ -137,8 +144,9 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="23 &#x2103;"
-
-            />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -160,7 +168,9 @@
                     android:layout_height="wrap_content"
                     android:text="Wind speed"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_wind_dir"
@@ -168,7 +178,9 @@
                     android:layout_height="wrap_content"
                     android:text="Wind direction"
                     app:layout_constraintTop_toBottomOf="@+id/textView_wind_speed"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_wind_speed_value"
@@ -177,7 +189,9 @@
                     android:text="6.7 m/s"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-            />
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_wind_dir_value"
@@ -186,8 +200,9 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="West(280)"
-
-            />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -197,7 +212,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/WeatherCard2"
-            android:minHeight="125dp">
+            android:minHeight="116dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -210,7 +225,9 @@
                     android:layout_height="wrap_content"
                     android:text="Pressure"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"/>
 
             <TextView
                     style="@style/WeatherTextViewStyle"
@@ -219,7 +236,9 @@
                     android:layout_height="wrap_content"
                     android:text="Rain"
                     app:layout_constraintTop_toBottomOf="@+id/textView_pressure"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_humidity"
@@ -227,7 +246,9 @@
                     android:layout_height="wrap_content"
                     android:text="Humidity"
                     app:layout_constraintTop_toBottomOf="@+id/textView_rain"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_pressure_value"
@@ -235,7 +256,10 @@
                     android:layout_width="wrap_content"
                     android:text="1004 hpa"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_rain_value"
@@ -243,7 +267,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView_pressure_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="5.59 mm"/>
+                    android:text="5.59 mm"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_humidity_value"
@@ -251,7 +278,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView_rain_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="87%"/>
+                    android:text="87%"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -273,7 +303,9 @@
                     android:layout_height="wrap_content"
                     android:text="Sunrise"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_sunset"
@@ -281,7 +313,9 @@
                     android:layout_height="wrap_content"
                     android:text="Sunset"
                     app:layout_constraintTop_toBottomOf="@+id/textView_sunrise"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_sunrise_value"
@@ -290,7 +324,9 @@
                     android:text="07:31"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-            />
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_sunset_value"
@@ -298,11 +334,15 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView_sunrise_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="18:52"/>
+                    android:text="18:52"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="14dp"
+                    android:textColor="@color/colorPrimaryTextDark"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
