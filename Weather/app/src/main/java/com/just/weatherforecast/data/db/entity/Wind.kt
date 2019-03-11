@@ -1,4 +1,4 @@
-package com.just.weatherforecast.data.response
+package com.just.weatherforecast.data.db.entity
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.just.weatherforecast.data.response
+package com.just.weatherforecast.data.db.entity
 
 import com.google.gson.annotations.SerializedName
 
@@ -11,4 +11,5 @@ data class MainWeatherParameters(
     val temperatureMin: Double,
     @SerializedName("temp_max")
     val temperatureMax: Double
+
 )
