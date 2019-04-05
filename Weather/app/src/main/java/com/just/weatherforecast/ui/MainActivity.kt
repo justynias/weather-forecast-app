@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        content.visibility= View.GONE
+        //loader.visibility=View.VISIBLE
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
         DataBindingUtil.setContentView<ActivityMainBinding>(
@@ -64,6 +66,10 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
             it?.also{
                 mainViewModel.setWeather(currentWeather)
                Log.d("CHANGE", currentWeather.value!![0].toString())
+                //loader.playAnimation()
+                loader.visibility=View.GONE
+                content.visibility= View.VISIBLE
+
 
             }
         })

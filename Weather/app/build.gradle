@@ -81,4 +81,8 @@ dependencies {
 
     // Better dateTime-time support even on older Android versions
     implementation "com.jakewharton.threetenabp:threetenabp:1.1.0"
+
+    //lottie animations
+    implementation "com.airbnb.android:lottie:3.0.0"
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
 }
