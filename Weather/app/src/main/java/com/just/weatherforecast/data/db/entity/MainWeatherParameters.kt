@@ -11,5 +11,4 @@ data class MainWeatherParameters(
     val temperatureMin: Double,
     @SerializedName("temp_max")
     val temperatureMax: Double
-
 )
