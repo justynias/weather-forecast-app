@@ -19,6 +19,8 @@ class ForecastRepositoryImpl(
     private val locationProvider: LocationProvider
 ) : ForecastRepository {
 
+private lateinit var searchedLocalization: String
+    private  var USE_DEVICE_LOCATION: Boolean = true
 
 
     init{
@@ -27,10 +29,13 @@ class ForecastRepositoryImpl(
         }
     }
 
-    override suspend fun getCurrentWeather():LiveData<List<CurrentWeatherResponse>>{
+    fun setLocationPreferences(cutomLocation: String){
+        locationProvider.setLocationPreferences(cutomLocation)
+    }
+    override suspend fun getCurrentWeather():LiveData<CurrentWeatherResponse>{
         return withContext(Dispatchers.IO){
             initWeatherData()
-            return@withContext currentWeatherDao.getCurrentWeatherList()
+            return@withContext currentWeatherDao.getCurrentWeather()
         }
     }
 
@@ -46,7 +51,7 @@ class ForecastRepositoryImpl(
         fetchCurrentWeather()
         return
 
-        val lastWeather = currentWeatherDao?.getCurrentWeatherListNonLive()
+      //  val lastWeather = currentWeatherDao?.getCurrentWeatherListNonLive()
 
 //            if (lastWeather == null|| locationProvider.hasLocationChanged(lastWeather))
 //                {

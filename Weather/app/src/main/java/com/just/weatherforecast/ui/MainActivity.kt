@@ -5,13 +5,13 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -55,9 +55,12 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
     }
 
     private fun hasLocationPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
+
     private val locationRequest = LocationRequest().apply {
         interval = 10000
         fastestInterval = 10000
@@ -79,12 +82,11 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         get() = job + Dispatchers.Main
 
 
-
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        content.visibility= View.GONE
+        content.visibility = View.GONE
         //loader.visibility=View.VISIBLE
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
@@ -112,18 +114,17 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
     }
 
 
-
     private fun loadUI() = launch {
         val currentWeather = mainViewModel.weather.await()
 
 
         currentWeather.observe(this@MainActivity, Observer {
-            it?.also{
+            it?.also {
                 mainViewModel.setWeather(currentWeather)
-               Log.d("CITY UI", currentWeather.value.toString())
+                Log.d("CITY UI", currentWeather.value.toString())
                 //loader.playAnimation()
-                loader.visibility=View.GONE
-                content.visibility= View.VISIBLE
+                loader.visibility = View.GONE
+                content.visibility = View.VISIBLE
 
 
             }
@@ -131,4 +132,28 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+        val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.setQueryHint("type localization")
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // task HERE
+                Log.d("CITY", query)
+                return false
+            }
+
+        })
+        return true
+    }
+
+
 }
+

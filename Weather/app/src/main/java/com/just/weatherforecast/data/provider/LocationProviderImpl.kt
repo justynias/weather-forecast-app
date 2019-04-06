@@ -19,6 +19,9 @@ class LocationProviderImpl(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     context: Context
 ) : PreferenceProvider(context), LocationProvider {
+    override fun setLocationPreferences(customLocation:String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val appContext = context.applicationContext
 

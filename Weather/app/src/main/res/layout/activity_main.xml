@@ -12,7 +12,8 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 
 
     <LinearLayout android:orientation="horizontal" android:layout_height="match_parent" android:layout_width="match_parent">
-    <LinearLayout
+
+        <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:id="@+id/loader">
@@ -56,6 +57,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/textView_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{viewModel.weatherLocation}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="30dp"
@@ -150,7 +152,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/textView_temp_min_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="18 &#x2103;"
+                    android:text="@{viewModel.weatherTempMin}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="14dp"
@@ -163,7 +165,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     app:layout_constraintTop_toBottomOf="@+id/textView_temp_min_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="23 &#x2103;"
+                    android:text="@{viewModel.weatherTempMax}"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/colorPrimaryTextDark"/>
@@ -206,7 +208,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/textView_wind_speed_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="6.7 m/s"
+                    android:text="@{viewModel.weatherWindSpeed}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="14dp"
@@ -219,53 +221,40 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     app:layout_constraintTop_toBottomOf="@+id/textView_wind_speed_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="West(280)"
+                    android:text="@{viewModel.weatherWindDirection}"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/colorPrimaryTextDark"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-            style="@style/AppCard"
-            android:id="@+id/WeatherCard3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/WeatherCard2"
-            android:minHeight="116dp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:id="@+id/WeatherCard3"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/WeatherCard2">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_pressure"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pressure"
+                    android:text="Wind speed"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginTop="14dp"
-                    android:layout_marginBottom="10dp"/>
-
-            <TextView
-                    style="@style/WeatherTextViewStyle"
-                    android:id="@+id/textView_rain"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rain"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_pressure"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
                     android:id="@+id/textView_humidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Humidity"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_rain"
+                    android:text="Wind direction"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_pressure"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="14dp"/>
@@ -274,7 +263,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/textView_pressure_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="1004 hpa"
+                    android:text="@{viewModel.weatherWindSpeed}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="14dp"
@@ -282,28 +271,19 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:textColor="@color/colorPrimaryTextDark"/>
             <TextView
                     style="@style/WeatherTextViewStyle"
-                    android:id="@+id/textView_rain_value"
+                    android:id="@+id/textView_humidity_value"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_pressure_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="5.59 mm"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="@color/colorPrimaryTextDark"/>
-            <TextView
-                    style="@style/WeatherTextViewStyle"
-                    android:id="@+id/textView_humidity_value"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_rain_value"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="87%"
+                    android:text="@{viewModel.weatherWindDirection}"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/colorPrimaryTextDark"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
+
+
 
     <com.google.android.material.card.MaterialCardView
             style="@style/AppCard"
@@ -341,7 +321,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/textView_sunrise_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="07:31"
+                    android:text="@{viewModel.weatherSunrise}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="14dp"
@@ -354,7 +334,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     app:layout_constraintTop_toBottomOf="@+id/textView_sunrise_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="18:52"
+                    android:text="@{viewModel.weatherSunset}"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/colorPrimaryTextDark"/>
