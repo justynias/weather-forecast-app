@@ -1,14 +1,17 @@
 package com.just.weatherforecast
 
 import android.app.Application
+import android.content.Context
 import android.preference.PreferenceManager
+import com.google.android.gms.location.LocationServices
 import com.just.weatherforecast.data.WeatherApiService
-import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
 import com.just.weatherforecast.data.db.entity.ForecastDatabase
 import com.just.weatherforecast.data.network.ConnectivityInterceptor
 import com.just.weatherforecast.data.network.ConnectivityInterceptorImpl
 import com.just.weatherforecast.data.network.WeatherNetworkDataSource
 import com.just.weatherforecast.data.network.WeatherNetworkDataSourceImpl
+import com.just.weatherforecast.data.provider.LocationProvider
+import com.just.weatherforecast.data.provider.LocationProviderImpl
 import com.just.weatherforecast.data.repository.ForecastRepository
 import com.just.weatherforecast.data.repository.ForecastRepositoryImpl
 import com.just.weatherforecast.ui.MainViewModelFactory
@@ -30,7 +33,9 @@ class ForecastApp: Application(), KodeinAware {
         bind() from singleton { WeatherApiService(instance()) }
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance())}
         bind () from provider {MainViewModelFactory(instance())}
-        bind<ForecastRepository>() with singleton {ForecastRepositoryImpl(instance(), instance())}
+        bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
+        bind<LocationProvider>() with singleton { LocationProviderImpl(instance(), instance()) }
+        bind<ForecastRepository>() with singleton {ForecastRepositoryImpl(instance(), instance(),instance())}
     }
 
     override fun onCreate() {

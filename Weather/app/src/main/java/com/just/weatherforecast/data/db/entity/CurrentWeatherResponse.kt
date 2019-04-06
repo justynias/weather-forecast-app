@@ -23,7 +23,13 @@ data class CurrentWeatherResponse(
 //    val rain: Rain,
     @SerializedName("sys")
     @Embedded(prefix = "sun_")
-    val sun: Sun
+    val sun: Sun,
+    @SerializedName("coord")
+    @Embedded(prefix = "coord_")
+    val coordinates: Coordinates,
+    @SerializedName("name")
+    val localization:  String
+
 )
 {
     @PrimaryKey(autoGenerate = false)

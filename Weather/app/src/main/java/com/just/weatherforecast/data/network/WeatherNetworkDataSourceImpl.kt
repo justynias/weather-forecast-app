@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.just.weatherforecast.data.WeatherApiService
 import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
 import com.just.weatherforecast.internal.NoConnectivityException
-import java.io.NotActiveException
 
 class WeatherNetworkDataSourceImpl(
     private val weatherApiService: WeatherApiService
@@ -15,9 +14,18 @@ class WeatherNetworkDataSourceImpl(
     override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
         get() = _downloadedCurrentWeather
 
-    override suspend fun fetchCurrentWeather(location: String) {
-        try{
-            val fetchedCurrentWeather= weatherApiService.getCurrentWeather("London").await()
+   // override suspend fun fetchCurrentWeather(location: String) {
+        override suspend fun fetchCurrentWeather(lat: String, lon:String) {
+
+            Log.d("CITY LAT", lat)
+            Log.d("CITY LON", lon)
+
+       try{
+            //val fetchedCurrentWeather= weatherApiService.getCurrentWeather(location).await()
+            val fetchedCurrentWeather= weatherApiService.getCurrentWeatherByCoord(lat, lon).await()
+           //val fetchedCurrentWeather= weatherApiService.getCurrentWeatherByCity("Katowice").await()
+
+           Log.d("CITY", fetchedCurrentWeather.toString())
             _downloadedCurrentWeather.postValue(fetchedCurrentWeather)
         }
         catch(e: NoConnectivityException){
