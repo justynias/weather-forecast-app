@@ -6,25 +6,21 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.just.weatherforecast.R
 import com.just.weatherforecast.databinding.ActivityMainBinding
-import com.just.weatherforecast.internal.asDeferred
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
@@ -82,12 +78,12 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         get() = job + Dispatchers.Main
 
 
+
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         content.visibility = View.GONE
-        //loader.visibility=View.VISIBLE
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
         DataBindingUtil.setContentView<ActivityMainBinding>(
@@ -96,14 +92,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
             this.setLifecycleOwner(this@MainActivity)
             this.viewModel = mainViewModel
         }
-        //fusedLocationProviderClient.
         requestLocationPermission()
-        if (hasLocationPermission()) {
-            Log.d("LOCATION", "has permission")
-            startLocationUpdates()
-        }
-        job = Job()
-        loadUI()
 
 
     }
@@ -113,6 +102,17 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         job.cancel()
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (hasLocationPermission()) {
+            startLocationUpdates()
+            job = Job()
+            loadUI()
+        }
+        else{
+            job = Job()
+            loadUI()
+        }
+    }
 
     private fun loadUI() = launch {
         val currentWeather = mainViewModel.weather.await()
@@ -121,19 +121,28 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         currentWeather.observe(this@MainActivity, Observer {
             it?.also {
                 mainViewModel.setWeather(currentWeather)
-                Log.d("CITY UI", currentWeather.value.toString())
-                //loader.playAnimation()
                 loader.visibility = View.GONE
                 content.visibility = View.VISIBLE
-
 
             }
         })
 
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle presses on the action bar menu items
+        when (item.itemId) {
+            R.id.location -> {
+                Toast.makeText(this, "TESTING BUTTON LOCATION", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
+
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
         searchView.setQueryHint("type localization")
@@ -145,8 +154,11 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                // task HERE
-                Log.d("CITY", query)
+
+                launch {
+                    content.visibility = View.GONE
+                    loader.visibility = View.VISIBLE
+                    mainViewModel.setCustomLocalization(query)}
                 return false
             }
 
