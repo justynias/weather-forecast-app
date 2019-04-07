@@ -19,8 +19,6 @@ data class CurrentWeatherResponse(
     val mainWeatherParameters: MainWeatherParameters,
     @Embedded(prefix = "wind_")
     val wind: Wind,
-//    @Embedded(prefix = "rain_")
-//    val rain: Rain,
     @SerializedName("sys")
     @Embedded(prefix = "sun_")
     val sun: Sun,

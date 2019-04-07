@@ -91,5 +91,8 @@ dependencies {
     //swipe to refresh
     implementation 'com.android.support:support-v4:28.0.0'
 
+    //icons
+    api 'com.github.pwittchen:weathericonview:1.1.0'
+
 
 }

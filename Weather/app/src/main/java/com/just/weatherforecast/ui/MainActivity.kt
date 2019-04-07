@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.github.pwittchen.weathericonview.WeatherIconView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -69,6 +70,8 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
     }
 
     //
+
+
     override val kodein by closestKodein()
     private val viewModelFactory: MainViewModelFactory by instance()
     private lateinit var mainViewModel: MainViewModel
@@ -79,23 +82,6 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 
 
 
-    @SuppressLint("MissingPermission")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        content.visibility = View.GONE
-        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-
-        DataBindingUtil.setContentView<ActivityMainBinding>(
-            this, R.layout.activity_main
-        ).apply {
-            this.setLifecycleOwner(this@MainActivity)
-            this.viewModel = mainViewModel
-        }
-        requestLocationPermission()
-
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -105,13 +91,13 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (hasLocationPermission()) {
             startLocationUpdates()
-            job = Job()
-            loadUI()
+            launch{
+                content.visibility = View.GONE
+                loader.visibility = View.VISIBLE
+                mainViewModel.setDeviceLocation()
+            }
         }
-        else{
-            job = Job()
-            loadUI()
-        }
+
     }
 
     private fun loadUI() = launch {
@@ -132,7 +118,21 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         // Handle presses on the action bar menu items
         when (item.itemId) {
             R.id.location -> {
-                Toast.makeText(this, "TESTING BUTTON LOCATION", Toast.LENGTH_SHORT).show()
+                if(hasLocationPermission()){
+                    startLocationUpdates()
+                    launch{
+                        content.visibility = View.GONE
+                        loader.visibility = View.VISIBLE
+                        mainViewModel.setDeviceLocation()
+                    }
+
+                }
+                else{
+
+                    requestLocationPermission()
+                }
+
+
                 return true
             }
         }
@@ -163,7 +163,32 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
             }
 
         })
+
         return true
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        content.visibility = View.GONE
+        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+
+        DataBindingUtil.setContentView<ActivityMainBinding>(
+            this, R.layout.activity_main
+        ).apply {
+            this.setLifecycleOwner(this@MainActivity)
+            this.viewModel = mainViewModel
+        }
+        job = Job()
+        loadUI()
+        requestLocationPermission()
+        
+        //need to bind icons, no context
+        val weatherIconView = findViewById<WeatherIconView>(R.id.imageView_condition_icon)
+        weatherIconView.setIconResource(getString(R.string.wi_cloud))
+
     }
 
 

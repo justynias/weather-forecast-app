@@ -14,22 +14,17 @@ class WeatherNetworkDataSourceImpl(
     override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
         get() = _downloadedCurrentWeather
 
-   // override suspend fun fetchCurrentWeather(location: String) {
-        override suspend fun fetchCurrentWeather(lat: String, lon:String) {
-
-            Log.d("CITY LAT", lat)
-            Log.d("CITY LON", lon)
-
-       try{
-            //val fetchedCurrentWeather= weatherApiService.getCurrentWeather(location).await()
-            val fetchedCurrentWeather= weatherApiService.getCurrentWeatherByCoord(lat, lon).await()
-           //val fetchedCurrentWeather= weatherApiService.getCurrentWeatherByCity("Katowice").await()
-
-           Log.d("CITY", fetchedCurrentWeather.toString())
-            _downloadedCurrentWeather.postValue(fetchedCurrentWeather)
+        override suspend fun fetchCurrentWeather(lat: String?, lon: String?, customLocation: String?) {
+       val fetchedCurrentWeather: CurrentWeatherResponse?=  try {
+           if (customLocation != null) {
+               weatherApiService.getCurrentWeatherByCityAsync(customLocation).await()
+           } else {
+               weatherApiService.getCurrentWeatherByCoordAsync(lat!!, lon!!).await() //shoulld be non null
+           }
+       }catch(e: NoConnectivityException){
+           null
+           }
+            fetchedCurrentWeather?.let { _downloadedCurrentWeather.postValue(it) }
         }
-        catch(e: NoConnectivityException){
-            Log.d("CONNECTION", "NO INTERNET")
-        }
+
     }
-}

@@ -15,22 +15,18 @@ const val API_KEY = "2273110d6b60d3be9145b6038442f8af"
 interface WeatherApiService {
 
     @GET("data/2.5/weather")
-    fun getCurrentWeatherByCoord(
-        //
-        //@Query("q") location: String
+    fun getCurrentWeatherByCoordAsync(
         @Query("lat") lat: String,
         @Query("lon") lon: String
 
     ): Deferred<CurrentWeatherResponse>
     @GET("data/2.5/weather")
-    fun getCurrentWeatherByCity(
-        //
+    fun getCurrentWeatherByCityAsync(
         @Query("q") location: String
-
 
     ): Deferred<CurrentWeatherResponse>
     //http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=2273110d6b60d3be9145b6038442f8af
-    //http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=2273110d6b60d3be9145b6038442f8af
+    //http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=2273110d6b60d3be9145b6038442f8af&units=metric
     companion object {
         operator fun invoke(connectivityInterceptor: ConnectivityInterceptor): WeatherApiService {
             val requestInterceptor = Interceptor { chain ->
@@ -38,7 +34,7 @@ interface WeatherApiService {
                 val url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("APPID", API_KEY)
+                    .addQueryParameter("appid", API_KEY).addQueryParameter("units", "metric")
                     .build()
                 val request = chain.request()
                     .newBuilder()

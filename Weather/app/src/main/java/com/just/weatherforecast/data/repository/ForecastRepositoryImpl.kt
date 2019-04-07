@@ -19,9 +19,6 @@ class ForecastRepositoryImpl(
     private val locationProvider: LocationProvider
 ) : ForecastRepository {
 
-private lateinit var searchedLocalization: String
-    private  var USE_DEVICE_LOCATION: Boolean = true
-
 
     init{
         weatherNetworkDataSource.downloadedCurrentWeather.observeForever{newCurrentWeather->
@@ -29,27 +26,35 @@ private lateinit var searchedLocalization: String
         }
     }
 
-    fun setLocationPreferences(cutomLocation: String){
-        locationProvider.setLocationPreferences(cutomLocation)
-    }
+//    fun setLocationPreferences(customLocation: String){
+//        //locationProvider.setLocationPreferences(cutomLocation)
+//    }
     override suspend fun getCurrentWeather():LiveData<CurrentWeatherResponse>{
         return withContext(Dispatchers.IO){
-            initWeatherData()
+            initWeatherData(null)
             return@withContext currentWeatherDao.getCurrentWeather()
         }
+    }
+    override suspend fun setCustomLocation(customLocation: String){
+        initWeatherData(customLocation)
     }
 
     private fun persistFetchedCurrentWeather(fetchedWeather: CurrentWeatherResponse){
         GlobalScope.launch(Dispatchers.IO){
             fetchedWeather.id=CURRENT_WEATHER_ID
-
+            currentWeatherDao.upsert(fetchedWeather)
         }
     }
 
-    private suspend fun initWeatherData(){
+    private suspend fun initWeatherData(customLocation: String?){
 //temporary
-        fetchCurrentWeather()
-        return
+
+        if(customLocation!=null){
+            fetchCurrentWeatherByLocation(customLocation)
+        }
+        else{
+           fetchCurrentWeatherByCoordinates()
+        }
 
       //  val lastWeather = currentWeatherDao?.getCurrentWeatherListNonLive()
 
@@ -69,16 +74,31 @@ private lateinit var searchedLocalization: String
 
 
 
-    private suspend fun fetchCurrentWeather() {
-        val lat=locationProvider.getPreferredLocationString().substringBefore(",")
-        val lon=locationProvider.getPreferredLocationString().substringAfter(",")
+    private suspend fun fetchCurrentWeatherByLocation(customLocation: String) {
 
         weatherNetworkDataSource.fetchCurrentWeather(
-            lat, lon
+            null,
+            null,
+            customLocation
         )
 
     }
+    private suspend fun fetchCurrentWeatherByCoordinates() {
+        val lat=locationProvider.getPreferredLocationString()?.substringBefore(",")
+        val lon=locationProvider.getPreferredLocationString()?.substringAfter(",")
 
+        if(lat!=null && lon!=null){
+            Log.d("FETCH", "fetch in repo")
+
+            weatherNetworkDataSource.fetchCurrentWeather(
+                lat, lon, null
+            )
+        }
+    }
+
+    override suspend fun setDeviceLocation(){
+        fetchCurrentWeatherByCoordinates()
+    }
     //need to implement fetching after 0 minutes
 //    private fun isFetchCurrentNeeded(lastFetchTime: ZonedDateTime): Boolean {
 //        val thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30)

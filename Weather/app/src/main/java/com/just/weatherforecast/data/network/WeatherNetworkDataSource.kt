@@ -9,7 +9,8 @@ interface WeatherNetworkDataSource {
 ////        location: String
 ////    )
 suspend fun fetchCurrentWeather(
-    lan: String,
-    lon: String
+    lan: String?,
+    lon: String?,
+    customLocation: String?
     )
 }
