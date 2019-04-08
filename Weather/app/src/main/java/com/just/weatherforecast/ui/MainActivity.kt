@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         )
     }
 
+
     private fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -121,7 +122,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         // Handle presses on the action bar menu items
         when (item.itemId) {
             R.id.location -> {
-                if(hasLocationPermission()){
+                if(hasLocationPermission()){ //need to check internet!
                     startLocationUpdates()
                     launch{
                         content.visibility = View.GONE

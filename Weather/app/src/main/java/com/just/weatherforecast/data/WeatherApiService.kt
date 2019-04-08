@@ -20,7 +20,7 @@ interface WeatherApiService {
         @Query("lat") lat: String,
         @Query("lon") lon: String
 
-    ): Deferred<CurrentWeatherResponse>
+    ): Deferred<Response<CurrentWeatherResponse>>
     @GET("data/2.5/weather")
     fun getCurrentWeatherByCityAsync(
         @Query("q") location: String
