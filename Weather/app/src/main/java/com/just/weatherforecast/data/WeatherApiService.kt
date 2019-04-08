@@ -6,6 +6,7 @@ import com.just.weatherforecast.data.network.ConnectivityInterceptor
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -24,7 +25,7 @@ interface WeatherApiService {
     fun getCurrentWeatherByCityAsync(
         @Query("q") location: String
 
-    ): Deferred<CurrentWeatherResponse>
+    ): Deferred<Response<CurrentWeatherResponse>>
     //http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=2273110d6b60d3be9145b6038442f8af
     //http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=2273110d6b60d3be9145b6038442f8af&units=metric
     companion object {

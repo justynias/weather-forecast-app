@@ -39,7 +39,7 @@ class MainViewModel(private val forecastRepository: ForecastRepository): ViewMod
     }
     //modify this because api is refreshed after every 10 minutes, need to use own real-time request date
     private fun convertTimestampToDate(date: Long): String{
-        val sdf = java.text.SimpleDateFormat("EEE d MMM, HH:00")
+        val sdf = java.text.SimpleDateFormat("EEE d MMM, HH:00", Locale.US)
         sdf.timeZone = java.util.TimeZone.getDefault()
         val converted = date?.times(1000)?.let { java.util.Date(it) }
         return sdf.format(converted)
