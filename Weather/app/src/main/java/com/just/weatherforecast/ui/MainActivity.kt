@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -184,13 +186,15 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         job = Job()
         loadUI()
         requestLocationPermission()
-        
-        //need to bind icons, no context
-        val weatherIconView = findViewById<WeatherIconView>(R.id.imageView_condition_icon)
-        weatherIconView.setIconResource(getString(R.string.wi_cloud))
+
+//        //need to bind icons, no context
+//        val weatherIconView = findViewById<WeatherIconView>(R.id.imageView_condition_icon)
+//        weatherIconView.setIconResource(getString(R.string.wi_cloud))
 
     }
 
 
+
 }
+
 

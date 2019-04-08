@@ -109,7 +109,9 @@
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="40dp"
                     app:layout_constraintHorizontal_bias="0.279" app:layout_constraintVertical_bias="0.0"
                     app:weatherIconColor="@android:color/secondary_text_dark_nodisable"
-            app:weatherIconSize="50"/>
+            app:weatherIconSize="50"
+
+           />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
