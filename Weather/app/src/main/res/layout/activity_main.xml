@@ -69,7 +69,7 @@
                     android:id="@+id/textView_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.weatherDescription}"
+                    android:text="@{viewModel.weatherDate+`, `+ viewModel.weatherDescription}"
                     app:layout_constraintTop_toBottomOf="@+id/textView_location"
                     app:layout_constraintStart_toStartOf="@+id/textView_location"
                     app:layout_constraintLeft_toRightOf="@id/textView_temperature"
@@ -109,7 +109,7 @@
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="40dp"
                     app:layout_constraintHorizontal_bias="0.279" app:layout_constraintVertical_bias="0.0"
                     app:weatherIconColor="@android:color/secondary_text_dark_nodisable"
-            app:weatherIconSize="50"
+                    app:weatherIconSize="50"
 
            />
 

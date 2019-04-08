@@ -37,6 +37,14 @@ class MainViewModel(private val forecastRepository: ForecastRepository): ViewMod
          return sdf.format(converted)
 
     }
+    //modify this because api is refreshed after every 10 minutes, need to use own real-time request date
+    private fun convertTimestampToDate(date: Long): String{
+        val sdf = java.text.SimpleDateFormat("EEE d MMM, HH:00")
+        sdf.timeZone = java.util.TimeZone.getDefault()
+        val converted = date?.times(1000)?.let { java.util.Date(it) }
+        return sdf.format(converted)
+
+    }
 
 
     fun setWeather(weather: LiveData<CurrentWeatherResponse>){
@@ -54,7 +62,8 @@ class MainViewModel(private val forecastRepository: ForecastRepository): ViewMod
 
         _weatherWindDirection.value= weather.value?.wind?.direction?.toInt().toString()
         _weatherWindSpeed.value=String.format("%.1f",  weather.value?.wind?.speed)
-        _weatherIconId.value= "wi_day_rain"
+        _weatherIconId.value= weather.value?.weathers?.get(0)?.icon
+        _weatherDate.value=weather.value?.date?.toLong()?.let { convertTimestampToDate(it) }
         //Log.d("ICON", getString(R.string.app_name))
         //icon weather.value?.weathers?.get(0)?.weatherIcon
     }
@@ -63,6 +72,9 @@ class MainViewModel(private val forecastRepository: ForecastRepository): ViewMod
     val weatherIconId:LiveData<String>
         get() = _weatherIconId
 
+    private val _weatherDate: MutableLiveData<String> = MutableLiveData()
+    val weatherDate:LiveData<String>
+        get() = _weatherDate
 
     private val _weatherTemp: MutableLiveData<String> = MutableLiveData()
     val weatherTemp:LiveData<String>

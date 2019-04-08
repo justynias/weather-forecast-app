@@ -26,8 +26,9 @@ data class CurrentWeatherResponse(
     @Embedded(prefix = "coord_")
     val coordinates: Coordinates,
     @SerializedName("name")
-    val localization:  String
-
+    val localization:  String,
+    @SerializedName("dt")
+    val date:  Int
 )
 {
     @PrimaryKey(autoGenerate = false)

@@ -11,7 +11,7 @@ import com.just.weatherforecast.data.repository.CURRENT_WEATHER_ID
 @Dao
 interface CurrentWeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-   fun upsert(currentWeatherResponse: CurrentWeatherResponse):Long
+   fun upsert(currentWeatherResponse: CurrentWeatherResponse)
 
     @Query("select * from current_weather where id = $CURRENT_WEATHER_ID")
     fun getCurrentWeather(): LiveData<CurrentWeatherResponse>

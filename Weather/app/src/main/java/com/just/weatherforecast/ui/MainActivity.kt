@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         currentWeather.observe(this@MainActivity, Observer {
             it?.also {
                 mainViewModel.setWeather(currentWeather)
+                applyIcons(mainViewModel.weatherIconId.value.toString())
                 loader.visibility = View.GONE
                 content.visibility = View.VISIBLE
 
@@ -191,6 +192,26 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 //        val weatherIconView = findViewById<WeatherIconView>(R.id.imageView_condition_icon)
 //        weatherIconView.setIconResource(getString(R.string.wi_cloud))
 
+    }
+
+    private fun applyIcons(icon: String){
+        val weatherIconView = findViewById<WeatherIconView>(R.id.imageView_condition_icon)
+        Log.d("ICON", icon)
+        when(icon){
+            "01d"->weatherIconView.setIconResource(getString(R.string.wi_day_sunny))
+            "01n"->weatherIconView.setIconResource(getString(R.string.wi_night_clear))
+            "02d"->weatherIconView.setIconResource(getString(R.string.wi_day_sunny_overcast))
+            "02n"->weatherIconView.setIconResource(getString(R.string.wi_night_alt_cloudy))
+            "03d", "03n"->weatherIconView.setIconResource(getString(R.string.wi_cloud))
+            "04d", "04n"->weatherIconView.setIconResource(getString(R.string.wi_cloudy))
+            "09d", "09n"->weatherIconView.setIconResource(getString(R.string.wi_showers))
+            "10d"->weatherIconView.setIconResource(getString(R.string.wi_day_rain))
+            "10n"->weatherIconView.setIconResource(getString(R.string.wi_night_rain))
+            "11d", "11n"->weatherIconView.setIconResource(getString(R.string.wi_storm_showers))
+            "13d", "13n"->weatherIconView.setIconResource(getString(R.string.wi_snow))
+            "50d", "50n"->weatherIconView.setIconResource(getString(R.string.wi_fog))
+
+        }
     }
 
 
