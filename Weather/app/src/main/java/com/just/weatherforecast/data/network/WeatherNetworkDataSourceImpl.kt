@@ -9,6 +9,7 @@ import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
 import com.just.weatherforecast.internal.NoConnectivityException
 import retrofit2.Response
 import java.io.IOException
+import java.lang.Exception
 
 class WeatherNetworkDataSourceImpl(
     private val weatherApiService: WeatherApiService
@@ -17,8 +18,8 @@ class WeatherNetworkDataSourceImpl(
     override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
         get() = _downloadedCurrentWeather
 
-    private val _error = MutableLiveData<Result.Error>()
-    val error: LiveData<Result.Error>
+    private val _error = MutableLiveData<Exception>()
+    override val error: LiveData<Exception>
         get() = _error
 
         override suspend fun fetchCurrentWeather(lat: String?, lon: String?, customLocation: String?) {
@@ -45,11 +46,12 @@ class WeatherNetworkDataSourceImpl(
                     _downloadedCurrentWeather.postValue(Result.Success(response.body()).data)
                 }
                 else{
-                    _error.postValue(Result.Error(IOException("Error occurred during fetching data!")))
+
+                    _error.postValue(IOException("Sorry, no results for this location"))
                 }
 
             }catch(e: NoConnectivityException){
-                _error.postValue(Result.Error(IOException("No internet connection!")))
+                _error.postValue(IOException("Please check your internet connection"))
 
             }
 

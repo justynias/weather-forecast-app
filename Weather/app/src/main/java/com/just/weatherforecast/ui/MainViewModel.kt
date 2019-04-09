@@ -21,6 +21,9 @@ class MainViewModel(private val forecastRepository: ForecastRepository): ViewMod
     val weather by lazyDeffered {
         forecastRepository.getCurrentWeather()
     }
+    val error by lazyDeffered {
+        forecastRepository.getError()
+    }
 
     suspend fun setCustomLocalization(localization: String){
         forecastRepository.setCustomLocation(localization)

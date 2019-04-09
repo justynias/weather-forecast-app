@@ -2,6 +2,7 @@ package com.just.weatherforecast.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.just.weatherforecast.data.Result
 import com.just.weatherforecast.data.db.CurrentWeatherDao
 import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
 import com.just.weatherforecast.data.network.WeatherNetworkDataSource
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 const val CURRENT_WEATHER_ID  = 0 //it was autogenerating without that
 
@@ -34,6 +36,9 @@ class ForecastRepositoryImpl(
             initWeatherData(null)
             return@withContext currentWeatherDao.getCurrentWeather()
         }
+    }
+    override suspend fun getError():LiveData<Exception>{
+        return weatherNetworkDataSource.error
     }
     override suspend fun setCustomLocation(customLocation: String){
         initWeatherData(customLocation)

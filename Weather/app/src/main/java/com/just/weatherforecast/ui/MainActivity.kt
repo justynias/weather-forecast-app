@@ -2,6 +2,7 @@ package com.just.weatherforecast.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.*
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
     //new code
 
     private val fusedLocationProviderClient: FusedLocationProviderClient by instance()
-
+    private lateinit var errorDialog:AlertDialog
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult?) {
             super.onLocationResult(p0)
@@ -103,10 +105,21 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 
     }
 
+
+
     private fun loadUI() = launch {
         val currentWeather = mainViewModel.weather.await()
+        val error = mainViewModel.error.await()
 
-
+        error.observe(this@MainActivity, Observer {
+            it?.also {
+                Log.d("ERROR", it.message)
+                errorDialog.setMessage(it.message)
+                errorDialog.show()
+                loader.visibility = View.GONE
+                content.visibility = View.VISIBLE
+            }
+        })
         currentWeather.observe(this@MainActivity, Observer {
             it?.also {
                 mainViewModel.setWeather(currentWeather)
@@ -175,6 +188,11 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setPositiveButton("ok"){dialog, which ->
+        }
+        errorDialog = builder.create()
 
         content.visibility = View.GONE
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
