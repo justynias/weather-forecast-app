@@ -1,32 +1,25 @@
 package com.just.weatherforecast.ui
 
-import android.icu.util.TimeZone
-import android.provider.Settings.Global.getString
-import android.util.Log
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.just.weatherforecast.R
 import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
 import com.just.weatherforecast.data.repository.ForecastRepository
-import com.just.weatherforecast.internal.lazyDeffered
-import kotlinx.coroutines.Deferred
+import com.just.weatherforecast.internal.lazyDeferred
 import java.util.*
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 class MainViewModel(private val forecastRepository: ForecastRepository): ViewModel(){
 
-    val weather by lazyDeffered {
+    val weather by lazyDeferred {
         forecastRepository.getCurrentWeather()
     }
-    val error by lazyDeffered {
+    val error by lazyDeferred {
         forecastRepository.getError()
     }
 
-    suspend fun setCustomLocalization(localization: String){
-        forecastRepository.setCustomLocation(localization)
+    suspend fun setCustomLocation(location: String){
+        forecastRepository.setCustomLocation(location)
     }
 
     suspend fun setDeviceLocation(){
@@ -46,12 +39,11 @@ class MainViewModel(private val forecastRepository: ForecastRepository): ViewMod
         sdf.timeZone = java.util.TimeZone.getDefault()
         val converted = date?.times(1000)?.let { java.util.Date(it) }
         return sdf.format(converted)
-
     }
 
 
     fun setWeather(weather: LiveData<CurrentWeatherResponse>){
-//unit = metric
+
         _weatherDescription.value= weather.value?.weathers?.get(0)?.description
         _weatherLocation.value= weather.value?.localization
         _weatherTemp.value= weather.value?.mainWeatherParameters?.temperatureC?.roundToInt().toString() //+  &#x2103;
@@ -59,16 +51,12 @@ class MainViewModel(private val forecastRepository: ForecastRepository): ViewMod
         _weatherTempMax.value= weather.value?.mainWeatherParameters?.temperatureMax?.roundToInt().toString()
         _weatherSunrise.value= weather.value?.sun?.sunrise?.toLong()?.let { convertTimestampToTime(it) }
         _weatherSunset.value= weather.value?.sun?.sunset?.toLong()?.let { convertTimestampToTime(it) }
-
         _weatherHumidity.value= weather.value?.mainWeatherParameters?.humidity?.toInt().toString()
         _weatherPressure.value= weather.value?.mainWeatherParameters?.pressure?.toInt().toString()
-
         _weatherWindDirection.value= weather.value?.wind?.direction?.toInt().toString()
         _weatherWindSpeed.value=String.format("%.1f",  weather.value?.wind?.speed)
         _weatherIconId.value= weather.value?.weathers?.get(0)?.icon
         _weatherDate.value=weather.value?.date?.toLong()?.let { convertTimestampToDate(it) }
-        //Log.d("ICON", getString(R.string.app_name))
-        //icon weather.value?.weathers?.get(0)?.weatherIcon
     }
 
     private val _weatherIconId: MutableLiveData<String> = MutableLiveData()

@@ -2,20 +2,14 @@ package com.just.weatherforecast.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -37,14 +31,15 @@ private const val MY_PERMISSION_ACCESS_COARSE_LOCATION = 1
 
 class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 
-    //new code
 
+    override val kodein by closestKodein()
+    private val viewModelFactory: MainViewModelFactory by instance()
+    private lateinit var mainViewModel: MainViewModel
     private val fusedLocationProviderClient: FusedLocationProviderClient by instance()
     private lateinit var errorDialog:AlertDialog
+
+//region location permission dialog
     private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(p0: LocationResult?) {
-            super.onLocationResult(p0)
-        }
     }
 
     private fun requestLocationPermission() {
@@ -74,25 +69,6 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null)
     }
 
-    //
-
-
-    override val kodein by closestKodein()
-    private val viewModelFactory: MainViewModelFactory by instance()
-    private lateinit var mainViewModel: MainViewModel
-
-    protected lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-
-
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (hasLocationPermission()) {
             startLocationUpdates()
@@ -102,9 +78,48 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
                 mainViewModel.setDeviceLocation()
             }
         }
+    }
+
+    //endregion
+
+    @SuppressLint("MissingPermission")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+        initAlertDialog()
+        content.visibility = View.GONE
+
+        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        DataBindingUtil.setContentView<ActivityMainBinding>(
+            this, R.layout.activity_main
+        ).apply {
+            this.lifecycleOwner = this@MainActivity
+            this.viewModel = mainViewModel
+        }
+        job = Job()
+        loadUI()
+        requestLocationPermission()
 
     }
 
+
+    private fun initAlertDialog(){
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setPositiveButton("ok"){dialog, which ->
+        }
+        errorDialog = builder.create()
+    }
+
+
+    protected lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
 
 
     private fun loadUI() = launch {
@@ -113,7 +128,6 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 
         error.observe(this@MainActivity, Observer {
             it?.also {
-                Log.d("ERROR", it.message)
                 errorDialog.setMessage(it.message)
                 errorDialog.show()
                 loader.visibility = View.GONE
@@ -131,30 +145,6 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         })
 
     }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle presses on the action bar menu items
-        when (item.itemId) {
-            R.id.location -> {
-                if(hasLocationPermission()){
-                    startLocationUpdates()
-                    launch{
-                        content.visibility = View.GONE
-                        loader.visibility = View.VISIBLE
-                        mainViewModel.setDeviceLocation()
-                    }
-
-                }
-                else{
-
-                    requestLocationPermission()
-                }
-
-
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -162,7 +152,8 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
-        searchView.setQueryHint("type localization")
+
+        searchView.queryHint = "type location"
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
@@ -175,7 +166,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
                 launch {
                     content.visibility = View.GONE
                     loader.visibility = View.VISIBLE
-                    mainViewModel.setCustomLocalization(query)}
+                    mainViewModel.setCustomLocation(query)}
                 return false
             }
 
@@ -184,38 +175,32 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         return true
     }
 
-    @SuppressLint("MissingPermission")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setPositiveButton("ok"){dialog, which ->
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle presses on the action bar menu items
+        when (item.itemId) {
+            R.id.location -> {
+                if(hasLocationPermission()){
+                    startLocationUpdates()
+                    launch{
+                        content.visibility = View.GONE
+                        loader.visibility = View.VISIBLE
+                        mainViewModel.setDeviceLocation()
+                    }
+                }
+                else{
+                    requestLocationPermission()
+                }
+                return true
+            }
         }
-        errorDialog = builder.create()
-
-        content.visibility = View.GONE
-        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-
-        DataBindingUtil.setContentView<ActivityMainBinding>(
-            this, R.layout.activity_main
-        ).apply {
-            this.setLifecycleOwner(this@MainActivity)
-            this.viewModel = mainViewModel
-        }
-        job = Job()
-        loadUI()
-        requestLocationPermission()
-
-//        //need to bind icons, no context
-//        val weatherIconView = findViewById<WeatherIconView>(R.id.imageView_condition_icon)
-//        weatherIconView.setIconResource(getString(R.string.wi_cloud))
-
+        return super.onOptionsItemSelected(item)
     }
 
+
+
+    //initial solution while using additional library
     private fun applyIcons(icon: String){
         val weatherIconView = findViewById<WeatherIconView>(R.id.imageView_condition_icon)
-        Log.d("ICON", icon)
         when(icon){
             "01d"->weatherIconView.setIconResource(getString(R.string.wi_day_sunny))
             "01n"->weatherIconView.setIconResource(getString(R.string.wi_night_clear))

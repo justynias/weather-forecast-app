@@ -1,7 +1,6 @@
 package com.just.weatherforecast.data.repository
 
 import androidx.lifecycle.LiveData
-import com.just.weatherforecast.data.Result
 import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
 import java.lang.Exception
 

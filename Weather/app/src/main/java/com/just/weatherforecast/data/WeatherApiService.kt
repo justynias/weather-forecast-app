@@ -12,7 +12,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-const val API_KEY = BuildConfig.ApiKey;   //"2273110d6b60d3be9145b6038442f8af"
+
+const val API_KEY = BuildConfig.ApiKey
 interface WeatherApiService {
 
     @GET("data/2.5/weather")
@@ -26,8 +27,8 @@ interface WeatherApiService {
         @Query("q") location: String
 
     ): Deferred<Response<CurrentWeatherResponse>>
-    //http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=2273110d6b60d3be9145b6038442f8af
-    //http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=2273110d6b60d3be9145b6038442f8af&units=metric
+    //http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139
+    //http://api.openweathermap.org/data/2.5/weather?q=London,uk
     companion object {
         operator fun invoke(connectivityInterceptor: ConnectivityInterceptor): WeatherApiService {
             val requestInterceptor = Interceptor { chain ->
