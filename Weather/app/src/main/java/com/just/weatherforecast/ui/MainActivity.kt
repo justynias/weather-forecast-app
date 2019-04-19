@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
 
     private fun initAlertDialog(){
         val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setPositiveButton("ok"){dialog, which ->
+        builder.setPositiveButton("ok"){dialog, _ ->
         }
         errorDialog = builder.create()
     }
