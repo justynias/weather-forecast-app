@@ -2,7 +2,6 @@ package com.just.weatherforecast
 
 import android.app.Application
 import android.content.Context
-import android.preference.PreferenceManager
 import com.google.android.gms.location.LocationServices
 import com.just.weatherforecast.data.WeatherApiService
 import com.just.weatherforecast.data.db.entity.ForecastDatabase
@@ -38,9 +37,5 @@ class ForecastApp: Application(), KodeinAware {
         bind<ForecastRepository>() with singleton {ForecastRepositoryImpl(instance(), instance(),instance())}
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        //AndroidThreeTen.init(this)
-    }
 
 }

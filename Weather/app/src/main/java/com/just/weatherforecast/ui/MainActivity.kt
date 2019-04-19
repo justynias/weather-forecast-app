@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity(), KodeinAware, CoroutineScope {
         // Handle presses on the action bar menu items
         when (item.itemId) {
             R.id.location -> {
-                if(hasLocationPermission()){ //need to check internet!
+                if(hasLocationPermission()){
                     startLocationUpdates()
                     launch{
                         content.visibility = View.GONE

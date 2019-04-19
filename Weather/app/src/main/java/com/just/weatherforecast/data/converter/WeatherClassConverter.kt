@@ -4,9 +4,6 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.just.weatherforecast.data.db.entity.Weather
-import java.sql.Date
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.util.*
 
 

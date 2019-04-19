@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-const val CURRENT_WEATHER_ID  = 0 //it was autogenerating without that
+const val CURRENT_WEATHER_ID  = 0 //it was autogenerating without this
 
 class ForecastRepositoryImpl(
     private val currentWeatherDao:CurrentWeatherDao,
@@ -28,9 +28,6 @@ class ForecastRepositoryImpl(
         }
     }
 
-//    fun setLocationPreferences(customLocation: String){
-//        //locationProvider.setLocationPreferences(cutomLocation)
-//    }
     override suspend fun getCurrentWeather():LiveData<CurrentWeatherResponse>{
         return withContext(Dispatchers.IO){
             initWeatherData(null)
@@ -52,29 +49,11 @@ class ForecastRepositoryImpl(
     }
 
     private suspend fun initWeatherData(customLocation: String?){
-//temporary
-
         if(customLocation!=null){
-            fetchCurrentWeatherByLocation(customLocation)
-        }
+            fetchCurrentWeatherByLocation(customLocation)        }
         else{
            fetchCurrentWeatherByCoordinates()
         }
-
-      //  val lastWeather = currentWeatherDao?.getCurrentWeatherListNonLive()
-
-//            if (lastWeather == null|| locationProvider.hasLocationChanged(lastWeather))
-//                {
-//                fetchCurrentWeather()
-//                return
-//            }
-
-//        if (isFetchCurrentNeeded(lastWeatherLocation.zonedDateTime))
-//            fetchCurrentWeather()
-
-//
-//        if(isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1)) || currentWeatherDao==null)
-//            fetchCurrentWeather()
     }
 
 
@@ -93,8 +72,6 @@ class ForecastRepositoryImpl(
         val lon=locationProvider.getPreferredLocationString()?.substringAfter(",")
 
         if(lat!=null && lon!=null){
-            Log.d("FETCH", "fetch in repo")
-
             weatherNetworkDataSource.fetchCurrentWeather(
                 lat, lon, null
             )
@@ -104,10 +81,5 @@ class ForecastRepositoryImpl(
     override suspend fun setDeviceLocation(){
         fetchCurrentWeatherByCoordinates()
     }
-    //need to implement fetching after 0 minutes
-//    private fun isFetchCurrentNeeded(lastFetchTime: ZonedDateTime): Boolean {
-//        val thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30)
-//        return lastFetchTime.isBefore(thirtyMinutesAgo)
-//    }
 
 }

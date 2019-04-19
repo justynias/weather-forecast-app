@@ -1,6 +1,7 @@
 package com.just.weatherforecast.data
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.just.weatherforecast.BuildConfig
 import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
 import com.just.weatherforecast.data.network.ConnectivityInterceptor
 import kotlinx.coroutines.Deferred
@@ -11,8 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-const val API_KEY = "2273110d6b60d3be9145b6038442f8af"
-
+const val API_KEY = BuildConfig.ApiKey;   //"2273110d6b60d3be9145b6038442f8af"
 interface WeatherApiService {
 
     @GET("data/2.5/weather")
