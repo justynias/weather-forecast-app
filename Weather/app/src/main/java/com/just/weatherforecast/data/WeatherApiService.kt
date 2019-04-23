@@ -1,0 +1,62 @@
+package com.just.weatherforecast.data
+
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.just.weatherforecast.BuildConfig
+import com.just.weatherforecast.data.db.entity.CurrentWeatherResponse
+import com.just.weatherforecast.data.network.ConnectivityInterceptor
+import kotlinx.coroutines.Deferred
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+const val API_KEY = BuildConfig.ApiKey
+interface WeatherApiService {
+
+    @GET("data/2.5/weather")
+    fun getCurrentWeatherByCoordAsync(
+        @Query("lat") lat: String,
+        @Query("lon") lon: String
+
+    ): Deferred<Response<CurrentWeatherResponse>>
+    @GET("data/2.5/weather")
+    fun getCurrentWeatherByCityAsync(
+        @Query("q") location: String
+
+    ): Deferred<Response<CurrentWeatherResponse>>
+    //http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139
+    //http://api.openweathermap.org/data/2.5/weather?q=London,uk
+    companion object {
+        operator fun invoke(connectivityInterceptor: ConnectivityInterceptor): WeatherApiService {
+            val requestInterceptor = Interceptor { chain ->
+
+                val url = chain.request()
+                    .url()
+                    .newBuilder()
+                    .addQueryParameter("appid", API_KEY).addQueryParameter("units", "metric")
+                    .build()
+                val request = chain.request()
+                    .newBuilder()
+                    .url(url)
+                    .build()
+
+                return@Interceptor chain.proceed(request)
+            }
+
+            val okHttpClient = OkHttpClient.Builder().addInterceptor(connectivityInterceptor)
+                .addInterceptor(requestInterceptor)
+                .build()
+
+            return Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl("https://api.openweathermap.org/")
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(WeatherApiService::class.java)
+        }
+    }
+}
