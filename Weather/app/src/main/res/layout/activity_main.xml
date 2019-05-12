@@ -42,8 +42,6 @@
             android:id="@+id/content">
 
 
-
-
     <com.google.android.material.card.MaterialCardView
             style="@style/AppCard"
             android:id="@+id/materialCardView_main"
